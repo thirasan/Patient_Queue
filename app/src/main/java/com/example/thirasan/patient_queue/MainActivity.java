@@ -1,17 +1,20 @@
 package com.example.thirasan.patient_queue;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AppView {
 
     private Presenter presenter;
-    private LinearLayout add;
-    private RelativeLayout home;
+
+    private DBHelper mHelper;
+    private List<String> patients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +26,17 @@ public class MainActivity extends AppCompatActivity implements AppView {
         if(presenter == null) {
             presenter = new Presenter(this);
         }
+
+        ListView patientList = (ListView)findViewById(R.id.patientList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        android.R.layout.simple_list_item_1, patients);
+
+        patientList.setAdapter(adapter);
     }
 
     private void initViewHolders() {
-        this.add = (LinearLayout) findViewById(R.id.add);
-        this.home = (RelativeLayout) findViewById(R.id.home);
+        this.mHelper = new DBHelper(this);
+        this.patients = mHelper.getPatientList();
     }
 
     @Override
@@ -36,13 +45,10 @@ public class MainActivity extends AppCompatActivity implements AppView {
     }
 
     public void addPatient(View view) {
-        this.home.setVisibility(View.GONE);
-        this.add.setVisibility(View.VISIBLE);
-    }
+        Intent addPatients = new Intent(MainActivity.this, AddPatientActivity.class);
 
-    public void add(View view) {
-        EditText firstName = (EditText) findViewById(R.id.firstName);
-        EditText lastName = (EditText) findViewById(R.id.lastName);
-        presenter.addPatient(firstName.toString(),lastName.toString());
+        startActivity(addPatients);
+        overridePendingTransition(android.R.anim.fade_in,
+                android.R.anim.fade_out);
     }
 }
