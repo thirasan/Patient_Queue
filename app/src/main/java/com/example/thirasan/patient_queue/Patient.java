@@ -45,9 +45,9 @@ public class Patient {
         return this.identifier;
     }
 
-    public String getQueue(){
-        return this.queue;
-    }
+    public String getQueue(){ return this.queue; }
+
+    public int getId() { return this.id; }
 
     public void setId(int id) {
         this.id = id;

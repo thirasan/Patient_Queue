@@ -96,4 +96,98 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
     }
 
+    public Patient getPatient(String id) {
+
+        sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.query( Patient.TABLE,
+                null,
+                Patient.Column.ID + " = ? ",
+                new String[] { id },
+                null,
+                null,
+                null,
+                null);
+
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        Patient patient = new Patient(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4));
+
+        patient.setId((int) cursor.getLong(0));
+
+        return patient;
+    }
+    public void alreadyInspect(String id,String queue){
+        sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.query( Patient.TABLE,
+                null,
+                Patient.Column.ID + " = ? ",
+                new String[] { id },
+                null,
+                null,
+                null,
+                null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        String[] queues = cursor.getString(4).split(",");
+        String newQueue = "";
+
+        if(queues.length > 1) {
+            for (int i = 0; i < queues.length; i++) {
+                if (!queue.equals(queues[i])) {
+                    newQueue += queues[i] + ",";
+                }
+            }
+            newQueue = newQueue.substring(0, newQueue.length() - 1);
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(Patient.Column.ID, cursor.getLong(0));
+        values.put(Patient.Column.FIRST_NAME, cursor.getString(1));
+        values.put(Patient.Column.LAST_NAME, cursor.getString(2));
+        values.put(Patient.Column.IDENTIFIER, cursor.getString(3));
+        values.put(Patient.Column.QUEUE, newQueue);
+
+        int row = sqLiteDatabase.update(Patient.TABLE,
+                values,
+                Patient.Column.ID + " = ? ",
+                new String[] { String.valueOf(cursor.getLong(0)) });
+
+        sqLiteDatabase.close();
+    }
+
+    public void updatePatient(Patient patient) {
+
+        sqLiteDatabase  = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Patient.Column.ID, patient.getId());
+        values.put(Patient.Column.FIRST_NAME, patient.getFirstName());
+        values.put(Patient.Column.LAST_NAME, patient.getLastName());
+        values.put(Patient.Column.IDENTIFIER, patient.getIdentifier());
+        values.put(Patient.Column.QUEUE, patient.getQueue());
+
+        int row = sqLiteDatabase.update(Patient.TABLE,
+                values,
+                Patient.Column.ID + " = ? ",
+                new String[] { String.valueOf(patient.getId()) });
+
+        sqLiteDatabase.close();
+    }
+
+    public void deletePatient(String id) {
+
+        sqLiteDatabase = this.getWritableDatabase();
+
+        sqLiteDatabase.delete(Patient.TABLE, Patient.Column.ID + " = " + id, null);
+
+        sqLiteDatabase.close();
+    }
 }

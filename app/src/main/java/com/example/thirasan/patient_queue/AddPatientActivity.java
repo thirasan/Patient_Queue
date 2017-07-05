@@ -36,6 +36,18 @@ public class AddPatientActivity extends AppCompatActivity {
 
         initViewHolders();
 
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            ID = bundle.getInt(Patient.Column.ID);
+            String firstName = bundle.getString(Patient.Column.FIRST_NAME);
+            String lastName = bundle.getString(Patient.Column.LAST_NAME);
+            String identifier = bundle.getString(Patient.Column.IDENTIFIER);
+
+            this.firstName.setText(firstName);
+            this.lastName.setText(lastName);
+            this.identifier.setText(identifier);
+        }
     }
 
     private void initViewHolders() {
@@ -88,7 +100,7 @@ public class AddPatientActivity extends AppCompatActivity {
                                     mHelper.addPatient(patient);
                                 } else {
                                     patient.setId(ID);
-                                    //mHelper.updateFriend(friend);
+                                    mHelper.updatePatient(patient);
                                 }
                                 finish();
                             }
