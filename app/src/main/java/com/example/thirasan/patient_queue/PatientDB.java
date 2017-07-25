@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DBHelper extends SQLiteOpenHelper {
+public class PatientDB extends SQLiteOpenHelper {
 
     private final String TAG = getClass().getSimpleName();
 
     private SQLiteDatabase sqLiteDatabase;
 
-    public DBHelper(Context context) {
-        super(context, Patient.DATABASE_NAME, null, Patient.DATABASE_VERSION);
+    public PatientDB(Context context) {
+        super(context, MainActivity.DATABASE_NAME, null, Patient.DATABASE_VERSION);
     }
 
     @Override

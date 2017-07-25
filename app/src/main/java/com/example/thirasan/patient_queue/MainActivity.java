@@ -1,21 +1,30 @@
 package com.example.thirasan.patient_queue;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
-    private DBHelper mHelper;
+    private PatientDB mHelper;
+
     private List<String> patients;
 
     ListView patientList;
+
+    public static String DATABASE_NAME = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +40,12 @@ public class MainActivity extends AppCompatActivity{
         patientList.setAdapter(adapter);
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        this.patients = mHelper.getPatientList();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, patients);
-
-        patientList.setAdapter(adapter);
-    }
-
     private void initViewHolders() {
-        this.mHelper = new DBHelper(this);
+        Intent intent = getIntent();
+
+        DATABASE_NAME = intent.getStringExtra("database");
+        this.mHelper = new PatientDB(this);
+
         this.patientList = (ListView)findViewById(R.id.patientList);
 
         patientList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -64,6 +66,17 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        this.patients = mHelper.getPatientList();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, patients);
+
+        patientList.setAdapter(adapter);
+    }
+
     public void addPatient(View view) {
         Intent addPatients = new Intent(MainActivity.this, AddPatientActivity.class);
 
@@ -71,4 +84,5 @@ public class MainActivity extends AppCompatActivity{
         overridePendingTransition(android.R.anim.fade_in,
                 android.R.anim.fade_out);
     }
+
 }

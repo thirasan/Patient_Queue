@@ -25,7 +25,7 @@ public class AddPatientActivity extends AppCompatActivity {
     private EditText q4;
     private EditText q5;
 
-    private DBHelper mHelper;
+    private PatientDB mHelper;
 
     private int ID = -1;
 
@@ -51,7 +51,7 @@ public class AddPatientActivity extends AppCompatActivity {
     }
 
     private void initViewHolders() {
-        this.mHelper = new DBHelper(this);
+        this.mHelper = new PatientDB(this);
         this.firstName = (EditText) findViewById(R.id.firstName);
         this.lastName = (EditText) findViewById(R.id.lastName);
         this.identifier = (EditText) findViewById(R.id.identifier);
