@@ -14,8 +14,7 @@ public class Patient {
     private String queue;
     private int id;
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String TABLE = "patient";
+    public static final String DATABASE_NAME = "patients.db";
 
     public class Column {
         public static final String ID = BaseColumns._ID;

@@ -36,21 +36,17 @@ public class QueueActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mHelper = new PatientDB(this);
-
-        setContentView(R.layout.activity_queue);
-
         initViewHolders();
 
-        patient = mHelper.getPatient(id);
-
-        setQueue(patient.getQueue().split(","));
-
-        firstName.setText(patient.getFirstName());
-        lastName.setText(patient.getLastName());
-        identifier.setText(patient.getIdentifier());
-
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        initViewHolders();
+    }
+
     private void setQueue(final String[] queue){
         for(int i = 0 ; i < queue.length ; i++){
             Button button = new Button(this);
@@ -75,6 +71,10 @@ public class QueueActivity extends AppCompatActivity{
     }
 
     private void initViewHolders() {
+        mHelper = new PatientDB(this);
+
+        setContentView(R.layout.activity_queue);
+
         Bundle bundle  = getIntent().getExtras();
 
         if (bundle != null) {
@@ -133,5 +133,12 @@ public class QueueActivity extends AppCompatActivity{
 
             }
         });
+        patient = mHelper.getPatient(id);
+
+        setQueue(patient.getQueue().split(","));
+
+        firstName.setText(patient.getFirstName());
+        lastName.setText(patient.getLastName());
+        identifier.setText(patient.getIdentifier());
     }
 }

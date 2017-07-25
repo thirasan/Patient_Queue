@@ -18,7 +18,10 @@ import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
 
+    public static int DATABASE_VERSION = 1;
+
     private CategoryDB cHelper;
+    private PatientDB mHelper;
 
     private List<String> category;
 
@@ -37,39 +40,57 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        initCategory();
+    }
+
     private void initCategory(){
         this.categoryList.removeAllViews();
         this.category = cHelper.getCategoryList();
+        DATABASE_VERSION = this.category.size();
+
         for(int i=0;i < this.category.size() ; i++){
-            Button button = new Button(this);
-            button.setLayoutParams(new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            if(!this.category.get(i).equals("null")) {
+                Button button = new Button(this);
+                button.setLayoutParams(new ActionBar.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            button.setText(this.category.get(i));
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent main = new Intent(StartActivity.this, MainActivity.class);
+                button.setText(this.category.get(i));
+                final String finalI = (i + 1) + "";
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent main = new Intent(StartActivity.this, MainActivity.class);
 
-                    Button b = (Button)v;
-                    String buttonText = b.getText().toString();
+                        Button b = (Button) v;
+                        String buttonText = b.getText().toString();
 
-                    main.putExtra("database",buttonText + ".db");
-                    startActivity(main);
-                    overridePendingTransition(android.R.anim.fade_in,
-                            android.R.anim.fade_out);
-                }
-            });
+                        main.putExtra("table", buttonText + "");
+                        main.putExtra("id", finalI);
+                        startActivity(main);
+                        overridePendingTransition(android.R.anim.fade_in,
+                                android.R.anim.fade_out);
+                    }
+                });
 
-            this.categoryList.addView(button);
+                this.categoryList.addView(button);
+            }
         }
     }
 
 
     public void addSort(View view) {
         EditText sort = (EditText)findViewById(R.id.sort);
-        cHelper.addCategory(sort.getText().toString());
-        initCategory();
+        String sorts = sort.getText().toString();
+        if(!this.category.contains(sorts) && !sorts.equals("")) {
+            cHelper.addCategory(sorts);
+            initCategory();
+
+            mHelper = new PatientDB(this);
+        }
+        sort.setText("");
     }
 }

@@ -1,6 +1,8 @@
 package com.example.thirasan.patient_queue;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +21,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
 
     private PatientDB mHelper;
+    private CategoryDB cHelper;
 
     private List<String> patients;
 
     ListView patientList;
 
-    public static String DATABASE_NAME = "";
+    public static String TABLE_NAME = "";
+    private String id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +46,11 @@ public class MainActivity extends AppCompatActivity{
 
     private void initViewHolders() {
         Intent intent = getIntent();
+        TABLE_NAME = intent.getStringExtra("table");
+        this.id = intent.getStringExtra("id");
 
-        DATABASE_NAME = intent.getStringExtra("database");
         this.mHelper = new PatientDB(this);
+        this.cHelper = new CategoryDB(this);
 
         this.patientList = (ListView)findViewById(R.id.patientList);
 
@@ -85,4 +91,32 @@ public class MainActivity extends AppCompatActivity{
                 android.R.anim.fade_out);
     }
 
+    public void dropTable(View view) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.delete_table_title));
+        builder.setMessage(getString(R.string.delete_teble_message));
+
+        builder.setPositiveButton(getString(android.R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cHelper.deleteCategory(id);
+                        mHelper.dropTable();
+                        finish();
+                    }
+                });
+
+        builder.setNegativeButton(getString(android.R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+
+        builder.show();
+
+    }
 }
