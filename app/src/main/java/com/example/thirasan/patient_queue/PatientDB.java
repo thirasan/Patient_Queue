@@ -22,7 +22,7 @@ public class PatientDB extends SQLiteOpenHelper {
     private SQLiteDatabase sqLiteDatabase;
 
     public PatientDB(Context context) {
-        super(context, MainActivity.DATABASE_NAME, null, Patient.DATABASE_VERSION);
+        super(context, Patient.DATABASE_NAME, null, StartActivity.DATABASE_VERSION);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class PatientDB extends SQLiteOpenHelper {
 
         String CREATE_PATIENT_TABLE = String.format("CREATE TABLE %s " +
                         "(%s INTEGER PRIMARY KEY  AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT, %s TEXT)",
-                Patient.TABLE,
+                MainActivity.TABLE_NAME,
                 Patient.Column.ID,
                 Patient.Column.FIRST_NAME,
                 Patient.Column.LAST_NAME,
@@ -46,7 +46,7 @@ public class PatientDB extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        String DROP_FRIEND_TABLE = "DROP TABLE IF EXISTS " + Patient.TABLE;
+        String DROP_FRIEND_TABLE = "DROP TABLE IF EXISTS " + MainActivity.TABLE_NAME;
 
         db.execSQL(DROP_FRIEND_TABLE);
 
@@ -61,7 +61,7 @@ public class PatientDB extends SQLiteOpenHelper {
         sqLiteDatabase = this.getWritableDatabase();
 
         Cursor cursor = sqLiteDatabase.query
-                (Patient.TABLE, null, null, null, null, null, null);
+                (MainActivity.TABLE_NAME, null, null, null, null, null, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -91,7 +91,7 @@ public class PatientDB extends SQLiteOpenHelper {
         values.put(Patient.Column.IDENTIFIER, patient.getIdentifier());
         values.put(Patient.Column.QUEUE, patient.getQueue());
 
-        sqLiteDatabase.insert(Patient.TABLE, null, values);
+        sqLiteDatabase.insert(MainActivity.TABLE_NAME, null, values);
 
         sqLiteDatabase.close();
     }
@@ -100,7 +100,7 @@ public class PatientDB extends SQLiteOpenHelper {
 
         sqLiteDatabase = this.getReadableDatabase();
 
-        Cursor cursor = sqLiteDatabase.query( Patient.TABLE,
+        Cursor cursor = sqLiteDatabase.query( MainActivity.TABLE_NAME,
                 null,
                 Patient.Column.ID + " = ? ",
                 new String[] { id },
@@ -123,7 +123,7 @@ public class PatientDB extends SQLiteOpenHelper {
     public void alreadyInspect(String id,String queue){
         sqLiteDatabase = this.getReadableDatabase();
 
-        Cursor cursor = sqLiteDatabase.query( Patient.TABLE,
+        Cursor cursor = sqLiteDatabase.query( MainActivity.TABLE_NAME,
                 null,
                 Patient.Column.ID + " = ? ",
                 new String[] { id },
@@ -155,7 +155,7 @@ public class PatientDB extends SQLiteOpenHelper {
         values.put(Patient.Column.IDENTIFIER, cursor.getString(3));
         values.put(Patient.Column.QUEUE, newQueue);
 
-        int row = sqLiteDatabase.update(Patient.TABLE,
+        int row = sqLiteDatabase.update(MainActivity.TABLE_NAME,
                 values,
                 Patient.Column.ID + " = ? ",
                 new String[] { String.valueOf(cursor.getLong(0)) });
@@ -174,7 +174,7 @@ public class PatientDB extends SQLiteOpenHelper {
         values.put(Patient.Column.IDENTIFIER, patient.getIdentifier());
         values.put(Patient.Column.QUEUE, patient.getQueue());
 
-        int row = sqLiteDatabase.update(Patient.TABLE,
+        int row = sqLiteDatabase.update(MainActivity.TABLE_NAME,
                 values,
                 Patient.Column.ID + " = ? ",
                 new String[] { String.valueOf(patient.getId()) });
@@ -186,7 +186,16 @@ public class PatientDB extends SQLiteOpenHelper {
 
         sqLiteDatabase = this.getWritableDatabase();
 
-        sqLiteDatabase.delete(Patient.TABLE, Patient.Column.ID + " = " + id, null);
+        sqLiteDatabase.delete(MainActivity.TABLE_NAME, Patient.Column.ID + " = " + id, null);
+
+        sqLiteDatabase.close();
+    }
+
+    public void dropTable(){
+
+        sqLiteDatabase = this.getReadableDatabase();
+
+        sqLiteDatabase.execSQL("DROP TABLE "+MainActivity.TABLE_NAME);
 
         sqLiteDatabase.close();
     }

@@ -80,11 +80,17 @@ public class CategoryDB extends SQLiteOpenHelper{
         sqLiteDatabase.close();
     }
 
-    public void deleteCategory(String category) {
+    public void deleteCategory(String id) {
 
         sqLiteDatabase = this.getWritableDatabase();
 
-        sqLiteDatabase.delete("category", "sort = " + category, null);
+        ContentValues values = new ContentValues();
+        values.put("id",id);
+        values.put("sort","null");
+
+        sqLiteDatabase.update("category",values, "id = "+ id, null);
+
+//        sqLiteDatabase.delete("category", "id = " + id, null);
 
         sqLiteDatabase.close();
     }

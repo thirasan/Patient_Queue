@@ -16,15 +16,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:onClick="addPatient"
             android:text="+" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="dropTable"
+            android:text="X"/>
     </LinearLayout>
 
 </RelativeLayout>
