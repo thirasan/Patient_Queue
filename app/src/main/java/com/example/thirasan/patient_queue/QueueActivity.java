@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 public class QueueActivity extends AppCompatActivity{
 
-    DBHelper mHelper;
+    PatientDB mHelper;
 
     private LinearLayout queue;
     private TextView firstName;
@@ -36,7 +36,7 @@ public class QueueActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mHelper = new DBHelper(this);
+        mHelper = new PatientDB(this);
 
         setContentView(R.layout.activity_queue);
 
